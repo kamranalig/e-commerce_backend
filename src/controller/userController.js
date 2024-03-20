@@ -24,4 +24,4 @@ const getAllUser = async (req, res) => {
   }
 };
 
-module.express = { getUserProfile, getAllUser };
+module.exports = { getUserProfile, getAllUser };
