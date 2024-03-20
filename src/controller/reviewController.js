@@ -1,5 +1,5 @@
 const reviewService = require("../services/review.service");
-const productService = require("../services/product.service");
+
 
 const createReview = async (req, res) => {
   const user = req.user;
