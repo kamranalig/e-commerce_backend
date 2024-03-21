@@ -28,6 +28,11 @@ const orderItemSchema = new mongoose.Schema({
     ref: "user",
     required: true,
   },
+  cart: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "cart",
+    required: true,
+  },
   deliveryDate: {
     type: Date,
   },

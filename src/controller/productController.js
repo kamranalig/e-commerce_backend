@@ -1,8 +1,11 @@
 const productService = require("../services/product.service");
 
 const createProduct = async (req, res) => {
+  const data = req.body;
+  console.log("fffffffffffff_______", data);
   try {
-    const product = await productService.createProduct(req.body);
+    const product = await productService.createProduct(data);
+
     return res.status(201).send(product);
   } catch (error) {
     return res.status(500).send({ error: error.message });

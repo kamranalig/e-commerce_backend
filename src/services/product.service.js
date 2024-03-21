@@ -1,49 +1,55 @@
 const Category = require("../models/category.model");
 const Product = require("../models/product.model");
 
-async function createProduct(reqData) {
-  let topLevel = await Category.findOne({ name: reqData.topLevelCategory });
+async function createProduct(data) {
+  console.log("ssssssssssssss", data.topLavelCategory);
+  let topLevel = await Category.findOne({ name: data.topLavelCategory });
+
   if (!topLevel) {
     topLevel = new Category({
-      name: reqData.topLevelCategory,
+      name: data.topLavelCategory,
       level: 1,
     });
+    await topLevel.save();
   }
   let secondLevel = await Category.findOne({
-    name: reqData.secondLevelCategory,
+    name: data.secondLavelCategory,
     parentCategory: topLevel._id,
   });
   if (!secondLevel) {
     secondLevel = new Category({
-      name: reqData.secondLevelCategory,
+      name: data.secondLavelCategory,
       parentCategory: topLevel._id,
       level: 2,
     });
+    await secondLevel.save();
   }
 
   let thirdLevel = await Category.findOne({
-    name: reqData.thirdLevelCategory,
+    name: data.thirdLavelCategory,
     parentCategory: secondLevel._id,
   });
   if (!thirdLevel) {
     thirdLevel = new Category({
-      name: reqData.thirdLevelCategory,
+      name: data.thirdLavelCategory,
       parentCategory: secondLevel._id,
       level: 3,
     });
+
+    await thirdLevel.save();
   }
 
   const product = new Product({
-    title: reqData.title,
-    color: reqData.color,
-    description: reqData.description,
-    discountedPrice: reqData.discountedPrice,
-    discountPersent: reqData.discountPersent,
-    imageUrl: reqData.imageUrl,
-    brand: reqData.brand,
-    price: reqData.price,
-    sizes: reqData.sizes,
-    quantity: reqData.quantity,
+    title: data.title,
+    color: data.color,
+    description: data.description,
+    discountedPrice: data.discountedPrice,
+    discountPersent: data.discountPersent,
+    imageUrl: data.imageUrl,
+    brand: data.brand,
+    price: data.price,
+    sizes: data.sizes,
+    quantity: data.quantity,
     category: thirdLevel._id,
   });
   return await product.save();
@@ -68,7 +74,7 @@ async function findProductById(id) {
   return product;
 }
 
-async function getAllProducts(reqData) {
+async function getAllProducts(reqQuery) {
   let {
     category,
     color,

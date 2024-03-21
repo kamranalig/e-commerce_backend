@@ -4,12 +4,14 @@ const orderSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
-    // required: true,
+    required: true,
   },
-  orderItems: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "orderItems",
-  },
+  orderItems: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "orderItems",
+    },
+  ],
 
   orderDate: {
     type: Date,
@@ -19,7 +21,7 @@ const orderSchema = new mongoose.Schema({
     type: Date,
   },
   shippingAddress: {
-    type: Number,
+    type: String,
     required: true,
   },
 

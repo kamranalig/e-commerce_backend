@@ -3,8 +3,9 @@ const userService = require("../services/user.service");
 const getUserProfile = async (req, res) => {
   try {
     const authorizationHeader = req.headers.authorization;
+
     if (!authorizationHeader) {
-      return res.status(404).send({ error: "Token not found" });
+      return res.status(404).send({ error: "Token not foundss" });
     }
 
     const jwt = authorizationHeader.split(" ")[1];

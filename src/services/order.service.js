@@ -1,43 +1,47 @@
 const cartService = require("../services/cart.service");
 const Address = require("../models/address.model");
 const Order = require("../models/order.model");
-async function createOrder(user, shippAddress) {
+const OrderItem = require("../models/cartItem.model");
+
+async function createOrder(user, shippingAddress) {
   let address;
 
-  if (shippAddress._id) {
-    let exitAddress = await Address.findById(shippAddress._id);
+  if (shippingAddress._id) {
+    let exitAddress = await Address.findById(shippingAddress._id);
     address = exitAddress;
   } else {
-    address = new Address(shippAddress);
+    address = new Address(shippingAddress);
     address.user = user;
     await address.save();
 
-    user.addresses.push(address);
+    user.address.push(address);
     await user.save();
   }
   const cart = await cartService.findUserCart(user._id);
   const orderItems = [];
   for (const item of cart.cartItems) {
-    const orderItem = new orderItems({
+    const orderItem = new OrderItem({
       price: item.price,
       product: item.product,
       quantity: item.quantity,
       size: item.size,
       userId: item.userId,
       discountedPrice: item.discountedPrice,
+      cart: cart._id,
     });
     const createOrderItem = await orderItem.save();
     orderItems.push(createOrderItem);
   }
 
   const createdOrder = new Order({
-    user,
-    orderItems,
+    user: user,
+    orderItems: orderItems,
     totalPrice: cart.totalPrice,
     totalDiscountedPrice: cart.totalDiscountedPrice,
     discounte: cart.discounte,
     totalItem: cart.totalItem,
-    shippAddress: address,
+    shippingAddress: address,
+    orderDate: new Date(),
   });
   const saveOrder = await createdOrder.save();
   return saveOrder;
@@ -115,7 +119,6 @@ module.exports = {
   shipOrder,
   deliverOrder,
   cancelledOrder,
-  findOrderById,
   userOrderHistory,
   getAllOrders,
   deleteOrder,
