@@ -15,7 +15,7 @@ async function findUserCart(user) {
   let userId = user._id;
   try {
     const cart = await Cart.findOne({ user: userId });
-    console.log("herrrrrrrrrrrr", cart);
+
     const cartItems = await CartItem.find({ cart: cart._id }).populate(
       "product"
     );
@@ -28,13 +28,14 @@ async function findUserCart(user) {
     for (let cartItem of cart.cartItems) {
       totalPrice += cartItem.price;
       totalDiscountedPrice += cartItem.discountedPrice;
+
       totalItem += cartItem.quantity;
     }
 
     cart.totalPrice = totalPrice;
     cart.totalItem = totalItem;
     cart.discounte = totalPrice - totalDiscountedPrice;
-
+    console.log("cart", cart);
     return cart;
   } catch (error) {
     throw new Error(error.message);
@@ -42,32 +43,33 @@ async function findUserCart(user) {
 }
 
 async function addCartItem(userId, req) {
-  // try {
-  const cart = await Cart.findOne({ user: userId });
-  // console.log("here is new", cart);
-  const product = await Product.findById(req.productId);
-  const isPresent = await CartItem.findOne({
-    cart: cart._id,
-    product: product._id,
-    userId,
-  });
-  if (!isPresent) {
-    const cartItem = new CartItem({
-      product: product._id,
+  try {
+    const cart = await Cart.findOne({ user: userId });
+
+    const product = await Product.findById(req.productId);
+    const isPresent = await CartItem.findOne({
       cart: cart._id,
-      quantity: 1,
+      product: product._id,
       userId,
-      price: product.price,
-      size: req.size,
-      discountedPrice: product.discountedPrice,
     });
-    const createdCartItem = await cartItem.save();
-    cart.cartItems.push(createdCartItem);
-    await cart.save();
-    return "Item Added to Cart";
+    if (!isPresent) {
+      const cartItem = new CartItem({
+        product: product._id,
+        cart: cart._id,
+        quantity: 1,
+        userId,
+        price: product.price,
+        size: req.size,
+        discountedPrice: product.discountedPrice,
+      });
+      const createdCartItem = await cartItem.save();
+      cart.cartItems.push(createdCartItem);
+      await cart.save();
+      return createdCartItem;
+    }
+    return isPresent;
+  } catch (error) {
+    throw new Error(error.message);
   }
-  // } catch (error) {
-  //   throw new Error(error.message);
-  // }
 }
 module.exports = { createCart, addCartItem, findUserCart };

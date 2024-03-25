@@ -21,7 +21,8 @@ const orderSchema = new mongoose.Schema({
     type: Date,
   },
   shippingAddress: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "addresses",
     required: true,
   },
 
