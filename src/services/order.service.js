@@ -1,7 +1,7 @@
 const cartService = require("../services/cart.service");
 const Address = require("../models/address.model");
 const Order = require("../models/order.model");
-const OrderItem = require("../models/cartItem.model");
+const OrderItem = require("../models/orderItems.model");
 
 async function createOrder(user, shippingAddress) {
   let address;
@@ -83,12 +83,21 @@ async function cancelledOrder(orderId) {
 }
 
 async function findOrderById(orderId) {
-  const order = await Order.findById(orderId)
-    .populate("user")
-    .populate({ path: "orderItems", populate: { path: "product" } })
-    .populate("shippingAddress");
+  console.log("here ", orderId);
+  try {
+    const order = await Order.findById(orderId)
+      .populate("user")
+      .populate({ path: "orderItems", populate: { path: "product" } })
+      .populate("shippingAddress");
+    console.log("here is all", order);
+    if (!order) {
+      throw new Error("Order not found");
+    }
 
-  return order;
+    return order;
+  } catch (error) {
+    throw new Error(`Failed to find order by ID: ${error.message}`);
+  }
 }
 
 async function userOrderHistory(userId) {
@@ -122,4 +131,5 @@ module.exports = {
   userOrderHistory,
   getAllOrders,
   deleteOrder,
+  findOrderById,
 };

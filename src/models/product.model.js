@@ -47,7 +47,7 @@ const productSchema = new mongoose.Schema({
   reviews: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "reviewa",
+      ref: "reviews",
     },
   ],
   numRatings: {

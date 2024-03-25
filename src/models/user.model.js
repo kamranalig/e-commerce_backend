@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
   rating: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "rating",
+      ref: "ratings",
     },
   ],
   reviews: [

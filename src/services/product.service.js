@@ -52,6 +52,7 @@ async function createProduct(data) {
     quantity: data.quantity,
     category: thirdLevel._id,
   });
+  console.log("hjere is new pppppppppppppppp", product);
   return await product.save();
 }
 
