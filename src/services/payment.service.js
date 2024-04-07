@@ -10,8 +10,8 @@ const createPaymentLink = async (orderId) => {
     console.log("orderis here ", order);
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: order.totalPrice * 100,
-      currency: "PKR",
+      amount: order.totalDiscountedPrice * 100,
+      currency: "usd",
       payment_method_types: ["card"],
       description: `Payment for order ${orderId}`,
       receipt_email: order.user.email,

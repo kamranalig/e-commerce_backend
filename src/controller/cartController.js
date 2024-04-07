@@ -15,6 +15,7 @@ const findUserCart = async (req, res) => {
 
 const addItemToCart = async (req, res) => {
   const user = await req.user;
+  console.log(user, "here is");
   try {
     const cartItem = await cartService.addCartItem(user._id, req.body);
 

@@ -11,10 +11,14 @@ async function createOrder(user, shippingAddress) {
     address = exitAddress;
   } else {
     address = new Address(shippingAddress);
-    address.user = user;
+    address.user = user._id;
     await address.save();
-
-    user.address.push(address);
+    if (user.address) {
+      Object.assign(user.address, address.toObject());
+    } else {
+      user.address = address.toObject();
+    }
+    // user.address.push(address);
     await user.save();
   }
   const cart = await cartService.findUserCart(user._id);
@@ -43,6 +47,7 @@ async function createOrder(user, shippingAddress) {
     shippingAddress: address,
     orderDate: new Date(),
   });
+
   const saveOrder = await createdOrder.save();
   return saveOrder;
 }

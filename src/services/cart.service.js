@@ -28,13 +28,17 @@ async function findUserCart(user) {
     for (let cartItem of cart.cartItems) {
       totalPrice += cartItem.price;
       totalDiscountedPrice += cartItem.discountedPrice;
-
+      // console.log("hiiiiiiiiiiiii", totalDiscountedPrice);
       totalItem += cartItem.quantity;
     }
 
     cart.totalPrice = totalPrice;
     cart.totalItem = totalItem;
     cart.discounte = totalPrice - totalDiscountedPrice;
+    cart.totalDiscountedPrice = totalDiscountedPrice;
+    await cart.save();
+    console.log(cart.totalDiscountedPrice);
+
     console.log("cart", cart);
     return cart;
   } catch (error) {

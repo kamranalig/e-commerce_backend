@@ -20,9 +20,9 @@ const createUser = async (userData) => {
 
 const findUserById = async (userId) => {
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate("address");
     // .populate("address");
-
+    // console.log(user);
     if (!user) {
       throw new Error("user not found with id :", userId);
     }
